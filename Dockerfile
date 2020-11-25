@@ -25,10 +25,10 @@ RUN mkdir -p /config/apps && \
 
 FROM open-liberty:kernel-java8-openj9
 
-ARG SSL=true
+#ARG SSL=true
 
-ARG MP_MONITORING=true
-ARG HTTP_ENDPOINT=false
+#ARG MP_MONITORING=true
+#ARG HTTP_ENDPOINT=false
 
 RUN mkdir -p /opt/ol/wlp/usr/shared/config/lib/global
 #COPY --chown=1001:0 --from=build-stage /config/ /config/
@@ -37,7 +37,7 @@ COPY --from=build-stage /config/ /config/
 COPY --from=build-stage /sharedlibs/ /opt/ol/wlp/usr/shared/config/lib/global
 
 USER 0
-RUN configure.sh
+#RUN configure.sh
 
 # Upgrade to production license if URL to JAR provided
 ARG LICENSE_JAR_URL
