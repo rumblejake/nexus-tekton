@@ -36,7 +36,7 @@ RUN mkdir -p /opt/ol/wlp/usr/shared/config/lib/global
 COPY --from=build-stage /config/ /config/
 COPY --from=build-stage /sharedlibs/ /opt/ol/wlp/usr/shared/config/lib/global
 
-USER root
+# USER root
 RUN configure.sh
 
 # Upgrade to production license if URL to JAR provided
