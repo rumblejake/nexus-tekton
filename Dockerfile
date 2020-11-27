@@ -25,13 +25,12 @@ RUN mkdir -p /config/apps && \
 
 FROM open-liberty:kernel-java8-openj9
 
-ARG SSL=false
+ARG SSL=true
 
-ARG MP_MONITORING=false
+ARG MP_MONITORING=true
 ARG HTTP_ENDPOINT=false
 
 RUN mkdir -p /opt/ol/wlp/usr/shared/config/lib/global
-COPY --chown=1001:0 .src/main/liberty/config/server.xml /config/server.xml
 COPY --chown=1001:0 --from=build-stage /config/ /config/
 COPY --chown=1001:0 --from=build-stage /sharedlibs/ /opt/ol/wlp/usr/shared/config/lib/global
 
