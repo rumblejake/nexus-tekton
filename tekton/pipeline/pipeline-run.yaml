@@ -7,7 +7,7 @@ spec:
     - name: docker-image
       value: image-registry.openshift-image-registry.svc:5000/mod-resorts/migrated-mod-resorts:latest
   pipelineRef:
-    name: ci-cd-pipeline
+    name: ci-pipeline
   workspaces:
     - name: git-source
       persistentVolumeClaim:
