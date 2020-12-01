@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'mvn --version'
+                sh script 'mvn clean package'
             }
         }
         stage('Upload War To Nexus'){
