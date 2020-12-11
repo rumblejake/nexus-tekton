@@ -1,0 +1,30 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: nexus-pull
+spec:
+  steps:
+    - args:
+        - |-
+          ls         
+          echo pulling nexus file
+          curl -u admin:password -X GET "http://nexus3-jake-cicd.paul-pg-roks-3cd0ec11030dfa215f262137faf739f1-0000.eu-gb.containers.appdomain.cloud/service/rest/v1/search/assets/download?sort=version&repository=webapp-release&group=com.ibm.ta&name=modresorts10war" --output sars.war
+          echo -----------------------------------
+          ls
+      command:
+        - /bin/bash
+        - -c
+      image: quay.io/openshift/origin-cli:latest
+      name: pull
+      workingDir: /workspace/output
+    - args:
+        - |-
+          ls
+      command:
+        - /bin/bash
+        - -c
+      image: quay.io/openshift/origin-cli:latest
+      name: build
+      workingDir: /workspace/output
+  workspaces:
+    - name: output
