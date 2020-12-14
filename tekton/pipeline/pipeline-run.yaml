@@ -6,7 +6,7 @@ spec:
   params:
     - name: user
       value: admin
-    - name: password
+    - name: nexus-password
       value: password
   pipelineRef:
     name: sars-pipeline
