@@ -1,7 +1,13 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
+  creationTimestamp: "2020-12-14T12:13:07Z"
+  generation: 15
   name: nexus-pull
+  namespace: mod-resorts
+  resourceVersion: "60805678"
+  selfLink: /apis/tekton.dev/v1beta1/namespaces/mod-resorts/tasks/nexus-pull
+  uid: 01e04692-abfa-4bf1-8752-5e4d6eca1551
 spec:
   params:
     - description: The username
@@ -12,28 +18,55 @@ spec:
       type: string
   steps:
     - args:
-        - |-
+        - >-
           ls         
+
           echo pulling nexus file
-          curl -u $(params.user):$(params.nexus-password) -X GET "http://nexus3-jake-cicd.paul-pg-roks-3cd0ec11030dfa215f262137faf739f1-0000.eu-gb.containers.appdomain.cloud/service/rest/v1/search/assets/download?sort=version&repository=webapp-release&group=com.ibm.ta&name=modresorts10war" --output modresorts-1.0.war
+
+          curl -u $nexusUser:$nexusPassword -X GET $url --output
+          modresorts-1.0.war
+
           echo -----------------------------------
+
           mkdir target
+
           cp modresorts-1.0.war target
+
           ls
       command:
         - /bin/bash
-        - -c
-      image: quay.io/openshift/origin-cli:latest
+        - "-c"
+      env:
+        - name: url
+          valueFrom:
+            secretKeyRef:
+              key: url
+              name: nexus-secrets
+              optional: true
+        - name: nexusPassword
+          valueFrom:
+            secretKeyRef:
+              key: nexusPassword
+              name: nexus-secrets
+              optional: true
+        - name: nexusUser
+          valueFrom:
+            secretKeyRef:
+              key: nexusUser
+              name: nexus-secrets
+              optional: true
+      image: "quay.io/openshift/origin-cli:latest"
       name: pull
+      resources: {}
       workingDir: /workspace/output
     - args:
-        - |-
-          ls
+        - ls
       command:
         - /bin/bash
-        - -c
-      image: quay.io/openshift/origin-cli:latest
+        - "-c"
+      image: "quay.io/openshift/origin-cli:latest"
       name: build
+      resources: {}
       workingDir: /workspace/output
   workspaces:
     - name: output
