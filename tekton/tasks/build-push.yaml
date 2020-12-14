@@ -23,9 +23,11 @@ spec:
       name: TLSVERIFY
       type: string
     - name: docker-image
+      description: Path to image inside image-registry
       type: string
   steps:
     - command:
+        - cp application-file.war target/
         - buildah
         - bud
         - "--tls-verify=$(params.TLSVERIFY)"
