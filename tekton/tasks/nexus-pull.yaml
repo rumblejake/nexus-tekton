@@ -17,7 +17,8 @@ spec:
           echo pulling nexus file
           curl -u $(params.user):$(params.nexus-password) -X GET "http://nexus3-jake-cicd.paul-pg-roks-3cd0ec11030dfa215f262137faf739f1-0000.eu-gb.containers.appdomain.cloud/service/rest/v1/search/assets/download?sort=version&repository=webapp-release&group=com.ibm.ta&name=modresorts10war" --output application-file.war
           echo -----------------------------------
-          cp application-file.war target/
+          mkdir target
+          cp application-file.war target
           ls
       command:
         - /bin/bash
