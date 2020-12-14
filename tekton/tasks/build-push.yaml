@@ -27,7 +27,6 @@ spec:
       type: string
   steps:
     - command:
-        - cp application-file.war target/
         - buildah
         - bud
         - "--tls-verify=$(params.TLSVERIFY)"
