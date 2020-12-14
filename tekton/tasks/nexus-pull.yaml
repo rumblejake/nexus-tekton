@@ -3,12 +3,19 @@ kind: Task
 metadata:
   name: nexus-pull
 spec:
+  params: 
+    - description: The username
+      name: user
+      type: string
+    - description: nexus-password
+      name: nexus-password
+      type: string
   steps:
     - args:
         - |-
           ls         
           echo pulling nexus file
-          curl -u admin:password -X GET "http://nexus3-jake-cicd.paul-pg-roks-3cd0ec11030dfa215f262137faf739f1-0000.eu-gb.containers.appdomain.cloud/service/rest/v1/search/assets/download?sort=version&repository=webapp-release&group=com.ibm.ta&name=modresorts10war" --output sars.war
+          curl -u $(params.user):$(params.nexus-password) -X GET "http://nexus3-jake-cicd.paul-pg-roks-3cd0ec11030dfa215f262137faf739f1-0000.eu-gb.containers.appdomain.cloud/service/rest/v1/search/assets/download?sort=version&repository=webapp-release&group=com.ibm.ta&name=modresorts10war" --output sars.war
           echo -----------------------------------
           cp application-file.war target/
           ls
