@@ -8,6 +8,8 @@ spec:
       value: admin
     - name: nexus-password
       value: password
+    - name: docker-image
+      value: image-registry.openshift-image-registry.svc:5000/mod-resorts/nexus-mod-resorts:latest
   pipelineRef:
     name: sars-pipeline
   workspaces:
