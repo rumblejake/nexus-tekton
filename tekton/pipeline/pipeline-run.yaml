@@ -4,6 +4,10 @@ metadata:
   generateName: pipeline-
 spec:
   params:
+    - name: user
+      value: admin
+    - name: password
+      value: password
   pipelineRef:
     name: sars-pipeline
   workspaces:
