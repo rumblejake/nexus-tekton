@@ -24,7 +24,7 @@ pipeline {
             nexusUrl: '172.21.88.91:8081', 
             nexusVersion: 'nexus3', 
             protocol: 'http', 
-            repository: 'maven-central/', 
+            repository: 'webapp-release/', 
             version: '1.0.0'
           }
         }
