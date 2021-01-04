@@ -1,13 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  creationTimestamp: "2020-12-14T12:13:07Z"
-  generation: 15
   name: nexus-pull
-  namespace: mod-resorts
-  resourceVersion: "60805678"
-  selfLink: /apis/tekton.dev/v1beta1/namespaces/mod-resorts/tasks/nexus-pull
-  uid: 01e04692-abfa-4bf1-8752-5e4d6eca1551
 spec:
   params:
     - description: The username
@@ -16,33 +10,58 @@ spec:
     - description: nexus-password
       name: nexus-password
       type: string
+    - description: nexus asset id
+      name: asset-id
+      type: string
+    - name: repo-name
+      type: string
+    - name: nexus-action
+      type: string
+    - default: >-
+        http://nexus3-mod-resorts.paul-pg-roks-3cd0ec11030dfa215f262137faf739f1-0000.eu-gb.containers.appdomain.cloud/service/rest/v1/components/
+      name: url
+      type: string
   steps:
     - args:
         - >-
-          ls         
+          yum install jq -y
 
-          echo pulling nexus file
+          ls   
 
-          curl -u $nexusUser:$nexusPassword -X GET $url --output
-          modresorts-1.0.war
+          echo ASSET ID  $(params.asset-id)
 
-          echo -----------------------------------
+          echo REPO NAME  $(params.repo-name) 
+
+          echo ACTION  $(params.nexus-action) 
 
           mkdir target
 
-          cp modresorts-1.0.war target
+          echo pulling nexus file
+
+          curl -u $nexusUser:$nexusPassword -X GET
+          $(params.url)$(params.asset-id) --output nexus-assets.json
+
+
+          jq '.assets[] | .downloadUrl' nexus-assets.json >>
+          asset-downloads.json
+
+          while IFS= read -r line; do
+              THELINE=$(echo $line | tr -d '"')
+              FILENAME=$(echo $THELINE | awk -F / '{print$NF}' | tr -d '"')
+              echo FILENAME $FILENAME
+              THEURL=$(echo $THELINE)
+              echo THE_URL $THEURL
+              curl -u $nexusUser:$nexusPassword -X GET $THEURL --output $FILENAME 
+              cp $FILENAME target
+          done < asset-downloads.json
+
+          echo -----------------------------------
 
           ls
       command:
         - /bin/bash
         - "-c"
       env:
-        - name: url
-          valueFrom:
-            secretKeyRef:
-              key: url
-              name: nexus-secrets
-              optional: true
         - name: nexusPassword
           valueFrom:
             secretKeyRef:
@@ -67,6 +86,8 @@ spec:
       image: "quay.io/openshift/origin-cli:latest"
       name: build
       resources: {}
+      securityContext:
+        privileged: true
       workingDir: /workspace/output
   workspaces:
     - name: output
