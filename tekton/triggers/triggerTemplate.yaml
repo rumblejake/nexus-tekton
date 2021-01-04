@@ -1,0 +1,35 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: nexus-mod-resorts-trigger-template
+spec:
+  params:
+    - default: mod-resorts
+      name: image-namespace
+    - name: assetId
+    - name: repoName
+    - name: nexusAction
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: pipeline-
+      spec:
+        params:
+          - name: docker-image
+            value: >-
+              image-registry.openshift-image-registry.svc:5000/$(params.image-namespace)/nexus-mod-resorts:$(params.assetId)
+          - name: asset-id
+            value: $(params.assetId)
+          - name: nexus-action
+            value: $(params.nexusAction)
+          - name: repo-name
+            value: $(params.repoName)
+        pipelineRef:
+          name: sars-pipeline
+        serviceAccountName: pipeline
+        timeout: 1h0m0s
+        workspaces:
+          - name: git-source
+            persistentVolumeClaim:
+              claimName: nexus-mod-resorts-pvc

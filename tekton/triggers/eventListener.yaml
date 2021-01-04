@@ -1,0 +1,13 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: nexus-mod-resorts-event-listener
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - bindings:
+        - kind: TriggerBinding
+          name: nexus-mod-resorts-trigger-binding
+      name: nexus-mod-resorts-trigger-template
+      template:
+        name: nexus-mod-resorts-trigger-template
