@@ -1,0 +1,13 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: mod-resorts-scm-event-listener
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - bindings:
+        - kind: TriggerBinding
+          name: mod-resorts-scm-trigger-binding
+      name: mod-resorts-scm-trigger-template
+      template:
+        name: mod-resorts-scm-trigger-template
