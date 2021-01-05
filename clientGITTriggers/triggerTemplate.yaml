@@ -18,10 +18,10 @@ spec:
             value: >-
               image-registry.openshift-image-registry.svc:5000/$(params.image-namespace)/nexus-mod-resorts:$(params.commitId)
         pipelineRef:
-          name: pipeline-ci
+          name: sars-pipeline
         serviceAccountName: pipeline
         timeout: 1h0m0s
         workspaces:
           - name: git-source
             persistentVolumeClaim:
-              claimName: tekton-pvc
+              claimName: nexus-mod-resorts-pvc
