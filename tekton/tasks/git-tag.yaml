@@ -1,0 +1,67 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: git-tag
+spec:
+  params:
+    - description: git url to clone
+      name: url
+      type: string
+    - default: master
+      description: "git revision to checkout (branch, tag, sha, ref…)"
+      name: revision
+      type: string
+    - default: ""
+      description: (optional) git refspec to fetch before checking out revision
+      name: refspec
+      type: string
+    - default: "true"
+      description: defines if the resource should initialize and fetch the submodules
+      name: submodules
+      type: string
+    - default: "1"
+      description: >-
+        performs a shallow clone where only the most recent commit(s) will be
+        fetched
+      name: depth
+      type: string
+    - default: "true"
+      description: >-
+        defines if http.sslVerify should be set to true or false in the global
+        git config
+      name: sslVerify
+      type: string
+    - default: ""
+      description: subdirectory inside the "output" workspace to clone the git repo into
+      name: subdirectory
+      type: string
+    - default: "true"
+      description: >-
+        clean out the contents of the repo's destination directory (if it
+        already exists) before trying to clone the repo there
+      name: deleteExisting
+      type: string
+    - description: component version
+      name: component-version
+      type: string
+  results:
+    - description: The precise commit SHA that was fetched by this Task
+      name: commit
+  steps:
+    - image: "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.12.0"
+      name: clone
+      resources: {}
+      script: |
+        git --version
+
+        echo $(params.component-version)
+
+        git status
+
+        git tag $(params.component-version) master
+
+        git tag
+
+  workspaces:
+    - description: The git repo will be cloned onto the volume backing this workspace
+      name: output
