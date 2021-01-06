@@ -52,15 +52,16 @@ spec:
       name: clone
       resources: {}
       script: |
-        git --version
+        # Setting up the config for the git.
+        git config --global user.email "SARS-pipeline@pipeline.com"
+        git config --global user.name "SARS pipeline"
 
-        echo $(params.component-version)
+        git remote add origin $(params.url)
 
-        pwd
+        git tag $(params.component-version)
 
-        git push $(params.url) $(params.component-version)
-
-        git tag
+        git push origin --tags
+    workingDir: $(workspaces.output.path)
 
   workspaces:
     - description: The git repo will be cloned onto the volume backing this workspace
