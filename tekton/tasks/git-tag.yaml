@@ -56,9 +56,9 @@ spec:
 
         echo $(params.component-version)
 
-        git status
+        pwd
 
-        git tag $(params.component-version) master
+        git push $(params.url) $(params.component-version)
 
         git tag
 
