@@ -52,13 +52,22 @@ spec:
       name: clone
       resources: {}
       script: |
-        # Setting up the config for the git.
-        git config --global user.email "SARS-pipeline@pipeline.com"
-        git config --global user.name "SARS pipeline"
+        if [ $(params.component-version) ]; then
+          echo Nexus push event
 
-        git tag $(params.component-version)
+          # Setting up the config for the git.
+          git config --global user.email "SARS-pipeline@pipeline.com"
+          git config --global user.name "SARS pipeline"
 
-        git push git@github.com:rumblejake/nexus-tekton.git --tags
+          git tag $(params.component-version)
+
+          git push git@github.com:rumblejake/nexus-tekton.git --tags
+
+          else
+          echo Github push event
+
+          git describe --tags --abbrev=0
+        fi 
     workingDir: $(workspaces.output.path)
   workspaces:
     - description: The git repo will be cloned onto the volume backing this workspace
