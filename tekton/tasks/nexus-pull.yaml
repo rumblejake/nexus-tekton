@@ -28,22 +28,22 @@ spec:
 
           ls   
 
-          echo ASSET ID  $(params.asset-id)
+          if [ -z $(params.component-id) ]; then 
+            echo "Github push"
+            curl -u $nexusUser:$nexusPassword -X GET $(params.url)$(cat component_version.txt) --output nexus-assets.json
 
-          echo REPO NAME  $(params.repo-name) 
+            else 
+            echo "Nexus push"  
+            curl -u $nexusUser:$nexusPassword -X GET $(params.url)$(params.component-id) --output nexus-assets.json
 
-          echo ACTION  $(params.nexus-action) 
+          fi
 
           mkdir target
 
-          echo pulling nexus file
-
-          curl -u $nexusUser:$nexusPassword -X GET
-          $(params.url)$(params.asset-id) --output nexus-assets.json
-
+          echo -- PULLING NEXUS assets --
 
           jq '.assets[] | .downloadUrl' nexus-assets.json >>
-          asset-downloads.json
+          component-downloads.json
 
           while IFS= read -r line; do
               THELINE=$(echo $line | tr -d '"')
@@ -53,9 +53,7 @@ spec:
               echo THE_URL $THEURL
               curl -u $nexusUser:$nexusPassword -X GET $THEURL --output $FILENAME 
               cp $FILENAME target
-          done < asset-downloads.json
-
-          echo -----------------------------------
+          done < component-downloads.json
 
           ls
       command:
