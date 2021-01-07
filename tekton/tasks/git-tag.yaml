@@ -58,7 +58,7 @@ spec:
 
         git tag $(params.component-version)
 
-        git push https://{TOKEN}@github.com/rumblejake/nexus-tekton.git --tags
+        git push git@github.com:rumblejake/nexus-tekton.git --tags
     workingDir: $(workspaces.output.path)
   workspaces:
     - description: The git repo will be cloned onto the volume backing this workspace
