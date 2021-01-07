@@ -65,6 +65,8 @@ spec:
 
           else
           echo Github push event
+          
+          git fetch --prune --unshallow
 
           git describe --tags --abbrev=0
         fi 
