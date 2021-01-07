@@ -61,7 +61,6 @@ spec:
         git tag $(params.component-version)
 
         git push origin --tags
-        
     workingDir: $(workspaces.output.path)
 
   workspaces:
