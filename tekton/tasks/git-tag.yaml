@@ -56,13 +56,10 @@ spec:
         git config --global user.email "SARS-pipeline@pipeline.com"
         git config --global user.name "SARS pipeline"
 
-        git remote add origin $(params.url)
-
         git tag $(params.component-version)
 
-        git push origin --tags
+        git push https://{TOKEN}@github.com/rumblejake/nexus-tekton.git --tags
     workingDir: $(workspaces.output.path)
-
   workspaces:
     - description: The git repo will be cloned onto the volume backing this workspace
       name: output
